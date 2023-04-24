@@ -4,7 +4,7 @@ const collectDefaultMetrics = client.collectDefaultMetrics;
 const Registry = client.Registry;
 const register = new Registry();
 collectDefaultMetrics({ register });
-
+const PORT = process.env.PORT || 3000;
 const app = express();
 
 collectDefaultMetrics();
@@ -33,6 +33,6 @@ app.get('/metrics', function (req, res) {
     register.metrics().then(data => res.status(200).send(data));
 });
 
-app.listen(3000, () => {
-    console.log('Server running on port 3000');
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });
