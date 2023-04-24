@@ -1,0 +1,28 @@
+name: Kubernetes Deployment
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+    
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+    env:
+      DOCKER_REPOSITORY: blazejop
+      IMAGE_NAME: nodemetrics
+      IMAGE_TAG: ${{ github.run_number }}
+      
+    steps:
+    - name: Git Checkout
+      uses: actions/checkout@v3
+    - name: Build Docker Image
+      run: docker build . --file Dockerfile --tag $DOCKER_REPOSITORY/$IMAGE_NAME:$GITHUB_RUN_NUMBER
+    - name: Login to Docker Hub
+      run: |
+        echo "${{ secrets.DOCKER_REGISTRY_PASSWORD }}" | docker login -u $DOCKER_REPOSITORY --password-stdin
+    - name: Push Image to Repository
+      run:
+        docker push $DOCKER_REPOSITORY/$IMAGE_NAME:$GITHUB_RUN_NUMBER
