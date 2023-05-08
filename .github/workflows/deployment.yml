@@ -26,3 +26,12 @@ jobs:
     - name: Push Image to Repository
       run:
         docker push $DOCKER_REPOSITORY/$IMAGE_NAME:$GITHUB_RUN_NUMBER
+    - name: Create Kubeconfig
+      run: |
+        mkdir ${HOME}/.kube
+        echo ${{ secrets.KUBE_CONFIG }} | base64 --decode > ${HOME}/.kube/config
+        cat ${HOME}/.kube/config
+    - name: Use Context
+      run: kubectl config use-context blaze
+    - name: Deploy to K8s
+      run: kubectl run nodemetrics --image=blazejop/nodemetrics:${{ github.run_number }}
