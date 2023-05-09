@@ -44,6 +44,6 @@ jobs:
         helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
         helm repo update
     - name: Helm Upgrade
-      run: helm upgrade -n blaze prometheus prometheus-community/kube-prometheus-stack -f /home/runner/work/nodemetrics/nodemetrics/manifests/values.yaml
+      run: helm install --upgrade -n blaze prometheus prometheus-community/kube-prometheus-stack -f /home/runner/work/nodemetrics/nodemetrics/manifests/values.yaml
     - name: Deploy to K3S
       run: kubectl apply -f /home/runner/work/nodemetrics/nodemetrics/manifests/nodemetrics.yaml
