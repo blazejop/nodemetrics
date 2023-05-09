@@ -33,5 +33,12 @@ jobs:
         cat ${HOME}/.kube/config
     - name: Use Context
       run: kubectl config use-context blaze
-    - name: Deploy to K8s
-      run: kubectl run nodemetrics --image=blazejop/nodemetrics:${{ github.run_number }}
+    - name: Create Grafana Credentials
+      run: |
+        echo -n "${{ secrets.GRAFANA_LOGIN }} > ./admin-user
+        echo -n ${{ secrets.GRAFANA_PASSWORD }} > /admin-password
+        kubectl create secret generic grafana-admin-credentials --from-file=./admin-user --from-file=admin-password
+    - name: Helm Update
+      run: helm update -n blaze prometheus prometheus-community/kube-prometheus-stack -f nodemetrics/manifests/values.yaml
+    - name: Deploy to K3S
+      run: kubectl apply -f nodemetrics/manifests/nodemetrics.yaml
