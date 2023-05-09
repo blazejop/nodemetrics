@@ -1,0 +1,16 @@
+fullnameOverride: prometheus
+
+alertmanager:
+  fullnameOverride: alertmanager
+
+grafana:
+  fullnameOverride: grafana
+  admin:
+    existingSecret: grafana-admin-credentials
+    userKey: admin-user
+    passwordKey: admin-password
+
+prometheus:
+  prometheusSpec:
+    podMonitorSelectorNilUsesHelmValues: false
+    serviceMonitorSelectorNilUsesHelmValues: false
