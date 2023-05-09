@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: nodemetrics
-          image: blazejop/nodemetrics:1
+          image: blazejop/nodemetrics:latest
           ports:
           - name: web
             containerPort: 3000
