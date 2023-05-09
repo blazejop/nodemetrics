@@ -39,7 +39,7 @@ jobs:
         echo -n "${{ secrets.GRAFANA_PASSWORD }}" > ./admin-password
         kubectl create secret generic grafana-admin-credentials --from-file=./admin-user --from-file=admin-password --dry-run=client -o yaml > grafana.yaml
         kubectl apply -f grafana.yaml
-    - name: Helm Update
-      run: helm update -n blaze prometheus prometheus-community/kube-prometheus-stack -f nodemetrics/manifests/values.yaml
+    - name: Helm Upgrade
+      run: helm upgrade -n blaze prometheus prometheus-community/kube-prometheus-stack -f nodemetrics/manifests/values.yaml
     - name: Deploy to K3S
       run: kubectl apply -f nodemetrics/manifests/nodemetrics.yaml
