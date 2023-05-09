@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: nodemetrics
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nodemetrics
+  template:
+    metadata:
+      labels:
+        app: nodemetrics
+    spec:
+      containers:
+        - name: nodemetrics
+          image: blazejop/nodemetrics:1
+          ports:
+          - name: web
+            containerPort: 3000
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: nodemetrics
+  labels:
+    app: nodemetrics
+spec:
+  selector:
+    app: nodemetrics
+  ports:
+  - name: web
+    port: 3000
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: nodemetrics
+  labels:
+    team: blaze
+spec:
+  selector:
+    matchLabels:
+      app: nodemetrics
+  endpoints:
+  - port: web
